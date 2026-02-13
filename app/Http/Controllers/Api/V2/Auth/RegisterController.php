@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\V2\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V2\Auth\LoginRequest;
 use App\Http\Requests\Api\V2\Auth\RegisterRequest;
-use App\Models\User;
 use LaravelJsonApi\Core\Document\Error;
+use Modules\User\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegisterController extends Controller

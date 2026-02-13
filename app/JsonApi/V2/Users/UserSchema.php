@@ -2,7 +2,6 @@
 
 namespace App\JsonApi\V2\Users;
 
-use App\Models\User;
 use Carbon\Carbon;
 use LaravelJsonApi\Eloquent\Contracts\Paginator;
 use LaravelJsonApi\Eloquent\Fields\DateTime;
@@ -11,6 +10,7 @@ use LaravelJsonApi\Eloquent\Fields\Str;
 use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
 use LaravelJsonApi\Eloquent\Schema;
+use Modules\User\Models\User;
 
 class UserSchema extends Schema
 {

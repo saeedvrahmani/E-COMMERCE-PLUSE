@@ -8,11 +8,10 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionTableSeeder extends Seeder
 {
-
     public function run(): void
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('permission')->truncate();
+        DB::table('permissions')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $permissions = [
             'role-list',
@@ -22,7 +21,7 @@ class PermissionTableSeeder extends Seeder
 
             'product-list',
             'product-create',
-            'product-sdit',
+            'product-edit',
             'product-delete',
 
             'order-list',
@@ -35,10 +34,11 @@ class PermissionTableSeeder extends Seeder
             'gift-edit',
             'gift-delete',
 
-            'see dashboard',
+            'see-dashboard',
         ];
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::create(['name' => $permission , 'guard_name' => 'api']);
+
         }
     }
 }

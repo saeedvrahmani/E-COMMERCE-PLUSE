@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Modules\User\Models;
 
 use App\Notifications\Auth\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

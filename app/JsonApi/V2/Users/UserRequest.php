@@ -15,7 +15,7 @@ class UserRequest extends ResourceRequest
      */
     public function rules(): array
     {
-         /** @var \App\Models\User|null $model */
+         /** @var \Modules\User\Models\User|null $model */
          if ($model = $this->model()) {
             return [
                 'name'          => ['sometimes', 'string'],

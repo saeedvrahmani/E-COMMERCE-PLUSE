@@ -25,7 +25,7 @@
                 <p>
                     If you have an account with us, please log in.
                 </p>
-                <form method="POST" action="{{ route('loginUser') }}">
+                <form method="POST" action="{{ route('login') }}">
                     @csrf
 
                     <input type="hidden" name="input" value="">

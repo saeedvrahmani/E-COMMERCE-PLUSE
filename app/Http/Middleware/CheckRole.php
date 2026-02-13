@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
+use Modules\User\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
