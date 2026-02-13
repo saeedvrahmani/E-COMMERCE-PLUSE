@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Container\Container as Application;
+use Modules\Base\Contracts\CacheManager;
 
 abstract class BaseRepository
 {
@@ -14,10 +15,14 @@ abstract class BaseRepository
     protected ?Model $model = null;
     protected Application $app;
     protected bool $withCache = false;
-protected  int $ttl = 600 ;
+    protected int $ttl = 600;
     protected string $tag = '';
+    protected string $cachekey = '';
 
-    public function __construct(Application $app)
+    public function __construct(
+        Application            $app,
+        protected CacheManager $cacheManager
+    )
     {
         $this->app = $app;
         $this->makeModel();
@@ -49,14 +54,17 @@ protected  int $ttl = 600 ;
     {
         return $this->allQuery($search, $relations)->paginate($perPage, $columns);
     }
-protected function cache(string $key , Closure $callback)
-{
-    if (! $this->withCache){
-        return $callback;
+
+    protected function cache(string $key, Closure $callback)
+    {
+        return $this->cacheManager->remember(
+            $key,
+            $this->ttl,
+            $callback,
+            $this->tag,
+        );
     }
-    return Cache::tags([$this->tag])
-        ->remember($key , $this->ttl , $callback);
-}
+
     public function allQuery(string $search = '', array $relations = [], int $skip = null, ?int $limit = null): Builder
     {
         $query = $this->model->newQuery()->with($relations);
@@ -108,7 +116,9 @@ protected function cache(string $key , Closure $callback)
 
     public function clearCache(): void
     {
-       Cache::tags([$this->tag])->flush();
+        $tag ??= $this->tag;
+        $key ??= $this->cachekey;
+        $this->cacheManager->flush($tag , $key);
     }
 
     public function update(array $input, int $id): Model
