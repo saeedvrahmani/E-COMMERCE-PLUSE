@@ -13,7 +13,9 @@ abstract class BaseRepository
 
     protected ?Model $model = null;
     protected Application $app;
-
+    protected bool $withCache = false;
+protected  int $ttl = 600 ;
+    protected string $tag = '';
 
     public function __construct(Application $app)
     {
@@ -47,7 +49,14 @@ abstract class BaseRepository
     {
         return $this->allQuery($search, $relations)->paginate($perPage, $columns);
     }
-
+protected function cache(string $key , Closure $callback)
+{
+    if (! $this->withCache){
+        return $callback;
+    }
+    return Cache::tags([$this->tag])
+        ->remember($key , $this->ttl , $callback);
+}
     public function allQuery(string $search = '', array $relations = [], int $skip = null, ?int $limit = null): Builder
     {
         $query = $this->model->newQuery()->with($relations);
@@ -99,16 +108,7 @@ abstract class BaseRepository
 
     public function clearCache(): void
     {
-        if (!isset($this->cachekey)) {
-            return;
-        }
-        if (is_array($this->cachekey)) {
-            foreach ($this->cachekey as $cache) {
-                Cache::forget($cache);
-            }
-            return;
-        }
-        Cache::forget($this->cachekey);
+       Cache::tags([$this->tag])->flush();
     }
 
     public function update(array $input, int $id): Model
@@ -155,7 +155,7 @@ abstract class BaseRepository
         return $query->withTrashed()->findOrFail($id);
     }
 
-    public function restore(int $id):bool
+    public function restore(int $id): bool
     {
         $query = $this->model->newQuery();
         $model = $query->withTrashed()->findOrFail($id);
@@ -167,14 +167,14 @@ abstract class BaseRepository
      */
     public function where(...$conditions): Builder
     {
-        return  $this->makeModel()->newQuery()->where(...$conditions);
+        return $this->makeModel()->newQuery()->where(...$conditions);
     }
 
-    public function updateWhere(array $input , ...$conditions): Model
+    public function updateWhere(array $input, ...$conditions): Model
     {
         $this->clearCache();
         $query = $this->model->newQuery();
-        $model= $query->where(...$conditions)->firstOrFail();
+        $model = $query->where(...$conditions)->firstOrFail();
         $model->fill($input);
         $model->save();
         return $model;
