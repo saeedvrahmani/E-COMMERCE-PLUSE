@@ -7,15 +7,22 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Container\Container as Application;
+use Modules\Base\Contracts\CacheManager;
 
 abstract class BaseRepository
 {
 
     protected ?Model $model = null;
     protected Application $app;
+    protected bool $withCache = false;
+    protected int $ttl = 600;
+    protected string $tag = '';
+    protected string $cachekey = '';
 
-
-    public function __construct(Application $app)
+    public function __construct(
+        Application            $app,
+        protected CacheManager $cacheManager
+    )
     {
         $this->app = $app;
         $this->makeModel();
@@ -46,6 +53,16 @@ abstract class BaseRepository
     ): LengthAwarePaginator
     {
         return $this->allQuery($search, $relations)->paginate($perPage, $columns);
+    }
+
+    protected function cache(string $key, Closure $callback)
+    {
+        return $this->cacheManager->remember(
+            $key,
+            $this->ttl,
+            $callback,
+            $this->tag,
+        );
     }
 
     public function allQuery(string $search = '', array $relations = [], int $skip = null, ?int $limit = null): Builder
@@ -99,16 +116,9 @@ abstract class BaseRepository
 
     public function clearCache(): void
     {
-        if (!isset($this->cachekey)) {
-            return;
-        }
-        if (is_array($this->cachekey)) {
-            foreach ($this->cachekey as $cache) {
-                Cache::forget($cache);
-            }
-            return;
-        }
-        Cache::forget($this->cachekey);
+        $tag ??= $this->tag;
+        $key ??= $this->cachekey;
+        $this->cacheManager->flush($tag , $key);
     }
 
     public function update(array $input, int $id): Model
@@ -155,7 +165,7 @@ abstract class BaseRepository
         return $query->withTrashed()->findOrFail($id);
     }
 
-    public function restore(int $id):bool
+    public function restore(int $id): bool
     {
         $query = $this->model->newQuery();
         $model = $query->withTrashed()->findOrFail($id);
@@ -167,14 +177,14 @@ abstract class BaseRepository
      */
     public function where(...$conditions): Builder
     {
-        return  $this->makeModel()->newQuery()->where(...$conditions);
+        return $this->makeModel()->newQuery()->where(...$conditions);
     }
 
-    public function updateWhere(array $input , ...$conditions): Model
+    public function updateWhere(array $input, ...$conditions): Model
     {
         $this->clearCache();
         $query = $this->model->newQuery();
-        $model= $query->where(...$conditions)->firstOrFail();
+        $model = $query->where(...$conditions)->firstOrFail();
         $model->fill($input);
         $model->save();
         return $model;

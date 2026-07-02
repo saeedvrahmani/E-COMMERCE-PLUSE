@@ -19,16 +19,14 @@ class UserServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRateLimiting();
+        $this->mapApiRoutes();
+        $this->mapWebRoutes();
+        $this->loadMigrationsFrom(__DIR__.'/Database/Migrations');
 
-        $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
-        });
+
+
+
     }
 
 
@@ -37,5 +35,19 @@ class UserServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+    }
+
+    private function mapApiRoutes(): void
+    {
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(__DIR__.'/routes/api.php');
+    }
+    private function mapWebRoutes(): void
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(__DIR__.'/routes/web.php');
     }
 }
