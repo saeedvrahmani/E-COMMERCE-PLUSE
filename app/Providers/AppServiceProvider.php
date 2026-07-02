@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public const MODULES_SERVICE_PROVIDERS = [
 
         UserServiceProvider::class,
+        BroadcastServiceProvider::class,
     ];
 
     public function register(): void

@@ -13,7 +13,7 @@ use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 use LaravelJsonApi\Laravel\Http\Controllers\JsonApiController;
 use LaravelJsonApi\Laravel\Routing\ResourceRegistrar;
 
-Route::prefix('v2')->middleware(JsonApi::class,CheckRole::class)->group(function () {
+Route::prefix('v2')->middleware(JsonApi::class)->group(function () {
     Route::post('/login', LoginController::class)->name('showLogin');
     Route::post('/logout', LogoutController::class);
     Route::post('/register', RegisterController::class);

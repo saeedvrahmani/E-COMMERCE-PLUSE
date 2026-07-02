@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
+Route::get('/test',function (){
+   event(new \App\Events\Test());
+});
 Route::get('/redis', function () {
+
 
     Cache::put('seeed' , 'rahmaniii' , 120);
     return \Illuminate\Support\Facades\Cache::get('seeed');

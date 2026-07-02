@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\User\Database\factories\UserFactory;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -36,6 +37,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public static function modelName(): string
+    {
+        return __('User');
+    }
     public function setPasswordAttribute($value): void
     {
         $this->attributes['password'] = Hash::make($value);
@@ -46,4 +52,8 @@ class User extends Authenticatable
         $this->notify(new ResetPasswordNotification($token));
     }
 
+    protected  static function newFactory(): UserFactory
+    {
+        return  UserFactory::new();
+    }
 }
