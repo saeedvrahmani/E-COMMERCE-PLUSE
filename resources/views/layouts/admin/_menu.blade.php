@@ -3,13 +3,15 @@
     <a href="#" class="dropdown-toggle">
         <i class="menu-icon fa {{isset($icon) ? $icon : ''}}"></i>
         <span class="menu-text">{{$menu_name}}</span>
-        <span class="badge badge-primary">{{isset($number) ? $menu_count["$number"] : ''}}</span>
+{{--        <span class="badge badge-primary">{{isset($number) ? $menu_count["$number"] : ''}}</span>--}}
         <span class="arrow fa fa-angle-down"></span>
     </a>
     <b class="arrow"> </b>
     <ul class="submenu">
         <li class="">
-            <a class="click_me" data-pjax href="{{ route($route_create) }}" data-title="{{ $menu_name }}">
+            <a class="click_me" data-pjax href="
+{{--            {{ route($route_create) }}--}}
+            " data-title="{{ $menu_name }}">
                 <i class="menu-icon fa fa-caret-right"></i>
                 {{ isset($subMenu) ? ucfirst($subMenu) : "Create" }}
             </a>
@@ -17,7 +19,9 @@
         </li>
         @if (isset($route_list))
             <li class="">
-                <a class="click_me" data-pjax href="{{ route($route_list) }}" data-title="{{ $menu_name }}">
+                <a class="click_me" data-pjax href="
+{{--                {{ route($route_list) }}--}}
+                " data-title="{{ $menu_name }}">
                     <i class="menu-icon fa fa-caret-right"></i>
                     {{ isset($secondSubMenu) ? ucfirst($secondSubMenu) : "Browse" }}
                 </a>

@@ -316,29 +316,29 @@
 
                             <tbody>
 {{--                            @forelse($popular_products as $product)--}}
-{{--                                <tr>--}}
-{{--                                    <td>--}}
-{{--                                        <a href="{{ route('product.show',$product->product_id) }}">{{ $product->product_name }}</a>--}}
-{{--                                    </td>--}}
-{{--                                    <td>--}}
+                                <tr>
+                                    <td>
+                                        <a href=""></a>
+                                    </td>
+                                    <td>
 {{--                                        @if($product->is_off == 1)--}}
-{{--                                            <small>--}}
-{{--                                                <s class="red">{{ $product->sale_price }}</s>--}}
-{{--                                            </small>--}}
-{{--                                            <b class="green">{{ $product->price }}</b>--}}
+                                            <small>
+                                                <s class="red"></s>
+                                            </small>
+                                            <b class="green"></b>
 {{--                                        @else--}}
-{{--                                            <b class="gray">{{ $product->price }}</b>--}}
+                                            <b class="gray"></b>
 {{--                                        @endif--}}
-{{--                                    </td>--}}
+                                    </td>
 
-{{--                                    <td class="hidden-480">--}}
+                                    <td class="hidden-480">
 {{--                                        @if($product->status == 0 )--}}
-{{--                                            <span class="label label-danger arrowed-right arrowed-in">Finish!</span>--}}
+                                            <span class="label label-danger arrowed-right arrowed-in">Finish!</span>
 {{--                                        @else--}}
-{{--                                            <span class="label label-info arrowed-right arrowed-in">on sale</span>--}}
+                                            <span class="label label-info arrowed-right arrowed-in">on sale</span>
 {{--                                        @endif--}}
-{{--                                    </td>--}}
-{{--                                </tr>--}}
+                                    </td>
+                                </tr>
 {{--                            @empty--}}
 {{--                                <tr>--}}
 {{--                                    <td colspan="3">No Data</td>--}}

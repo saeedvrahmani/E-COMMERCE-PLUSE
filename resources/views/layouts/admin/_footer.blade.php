@@ -1,10 +1,9 @@
-
 <div class="footer">
     <div class="footer-inner">
         <div class="footer-content">
             <span class="bigger-120">
                <span class="blue bolder">{{ env('APP_NAME') }}</span>
-              <a href="">developed by Saeed Rahmani</a> ; 2019
+              <a href="">developed by Saeed Rahmani</a> ; 2026
             </span>
             &nbsp; &nbsp;
             <span class="action-buttons">

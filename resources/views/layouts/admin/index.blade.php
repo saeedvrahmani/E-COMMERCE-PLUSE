@@ -1,4 +1,5 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 @include('layouts.admin._header')
 <body class="no-skin">
 @include('layouts.admin._navbar')
@@ -10,7 +11,7 @@
         } catch (e) {
         }
     </script>
-    @@include('layouts.admin._sidebar')
+    @include('layouts.admin._sidebar')
     <div class="main-content">
         <div class="main-content-inner">
             <div class="page-content">
@@ -121,56 +122,31 @@
 
 <!-- SEARCH SCRIPT -->
 <script type="text/javascript">
-   document.addEventListener('DOMContentLoaded', () => {
-
-       const form = document.getElementById('form-search');
-
-       form.addEventListener('submit', async function (e) {
-
-           e.preventDefault();
-
-           const formData = new FormData(this);
-
-           const preview = document.querySelector('.preview');
-           const tableData = document.querySelector('.table_data');
-
-           try {
-
-               // قبل از ارسال
-               preview.style.display = 'block';
-
-               const response = await fetch("{{ route('admin.search') }}", {
-                   method: "POST",
-                   headers: {
-                       "X-CSRF-TOKEN": document
-                           .querySelector('meta[name="csrf-token"]')
-                           .content,
-                       "Accept": "application/json"
-                   },
-                   body: formData
-               });
-
-               const data = await response.json();
-
-               if (data.html.trim() === "") {
-                   preview.innerHTML = "No more records found";
-                   return;
-               }
-
-               tableData.innerHTML = data.html;
-               preview.style.display = "none";
-
-           } catch (error) {
-
-               alert("Error");
-               preview.style.display = "none";
-               console.error(error);
-
-           }
-
-       });
-
-   });
+ jQuery(document).on('submit', '#form-search', function (e) {
+     e.preventDefault();
+     var form_data = new FormData(this);
+     {{--$.ajax({--}}
+     {{--    url: "{{ route('admin.search') }}",--}}
+     {{--    method: "POST",--}}
+     {{--    data: form_data,--}}
+     {{--    contentType: false,--}}
+     {{--    cache: false,--}}
+     {{--    processData: false,--}}
+     {{--    beforeSend: function() {--}}
+     {{--        $(".preview").show();--}}
+     {{--    }, success: function(data) {--}}
+     {{--        if (data.html == " ") {--}}
+     {{--            $('.preview').html("No more records found");--}}
+     {{--            return;--}}
+     {{--        }--}}
+     {{--        $(".table_data").empty().append(data.html);--}}
+     {{--        $('.preview').hide();--}}
+     {{--    }, error: function() {--}}
+     {{--        alert('error');--}}
+     {{--        $('.preview').hide();--}}
+     {{--    }--}}
+     {{--})--}}
+ })
 </script>
 
 <div id="extra_js">
