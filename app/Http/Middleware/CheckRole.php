@@ -9,13 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next , $role=[] ): Response
+    public function handle(Request $request, Closure $next  ): Response
     {
-        $user = User::where('email',$request->email)->first();
 
-        if (!$user || !$user->getRoleNames()) {
-        return abort(403, 'Sorry Access Denied !');
+        if (auth()->check()) {
+            if (auth()->user()->getRoleNames()->count()) {
+                return $next($request);
+            }
         }
-            return $next($request);
+        return abort(404);
     }
 }

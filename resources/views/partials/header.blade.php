@@ -65,7 +65,7 @@
                                 </form>
                             </li>
                         @else
-                            <li><a href="{{ route('login') }}"><span class="icon icon-lock_outline"></span>LogIn</a>
+                            <li><a href="{{ route('showLogin') }}"><span class="icon icon-lock_outline"></span>LogIn</a>
                             </li>
                             <li><a href="
                             {{ route('register') }}

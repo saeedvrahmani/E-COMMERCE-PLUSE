@@ -4,7 +4,7 @@ import AdminDashboard from '../components/admin/Dashboard.vue';
 import UserDashboard from '../components/user/Dashboard.vue';
 
 const routes = [
-    { path: '/login', component: Login },
+    // { path: '/login', component: Login },
     { path: '/admin', component: AdminDashboard, meta: { role: 'admin' } },
     { path: '/account', component: UserDashboard, meta: { role: 'user' } },
 ];

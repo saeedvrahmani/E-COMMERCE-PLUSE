@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 
+use App\Http\Middleware\CheckRole;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,10 +14,15 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
 
+//    public function __construct()
+//    {
+//        $this->middleware(CheckRole::class);
+//    }
+
     public function showLogin(): View
     {
 
-        return view('partials.auth.login');
+        return view('auth._login');
     }
 
     public function storeUser(LoginRequest $request): \Illuminate\Routing\Redirector|RedirectResponse
@@ -26,8 +32,10 @@ class AuthenticatedSessionController extends Controller
 
 
         $request->session()->regenerate();
-
-     return   redirect()->intended('/');
+        if (\auth()->user()->getRoleNames()->count()){
+            return redirect()->route('dashboard');
+        }
+        return redirect()->intended('/');
 
 
     }

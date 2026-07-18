@@ -19,7 +19,7 @@ class RegisteredUserController extends Controller
     public function create(): View
     {
 
-        return view('partials.auth.register');
+        return view('auth.register');
     }
 
     public function store(Request $request): RedirectResponse

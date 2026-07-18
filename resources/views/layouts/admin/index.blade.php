@@ -1,0 +1,180 @@
+<html lang="en">
+@include('layouts.admin._header')
+<body class="no-skin">
+@include('layouts.admin._navbar')
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.loadState('main-container')
+        } catch (e) {
+        }
+    </script>
+    @@include('layouts.admin._sidebar')
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="ace-settings-container" id="ace-settings-container">
+                    <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+                        <i class="ace-icon fa fa-cog bigger-130"></i>
+                    </div>
+                    <div class="ace-settings-box clearfix" id="ace-settings-box">
+                        <div class="pull-left width-50">
+                            <div class="ace-settings-item">
+                                <div class="pull-left">
+                                    <select id="skin-colorpicker" class="hide">
+                                        <option data-skin="no-skin" value="#438EB9">#438EB9</option>
+                                        <option data-skin="skin-1" value="#222A2D">#222A2D</option>
+                                        <option data-skin="skin-2" value="#C6487E">#C6487E</option>
+                                        <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
+                                    </select>
+                                </div>
+                                <span>&nbsp; Choose Skin</span>
+                            </div>
+
+
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-sidebar"
+                                       autocomplete="off"/>
+                                <label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
+                            </div>
+
+
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl" autocomplete="off"/>
+                                <label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
+                            </div>
+
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-add-container"
+                                       autocomplete="off"/>
+                                <label class="lbl" for="ace-settings-add-container">
+                                    Inside
+                                    <b>.container</b>
+                                </label>
+                            </div>
+                        </div><!-- /.pull-left -->
+
+                        <div class="pull-left width-50">
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-hover" autocomplete="off"/>
+                                <label class="lbl" for="ace-settings-hover"> Submenu on Hover</label>
+                            </div>
+
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-compact" autocomplete="off"/>
+                                <label class="lbl" for="ace-settings-compact"> Compact Sidebar</label>
+                            </div>
+
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-highlight"
+                                       autocomplete="off"/>
+                                <label class="lbl" for="ace-settings-highlight"> Alt. Active Item</label>
+                            </div>
+                        </div><!-- /.pull-left -->
+                    </div>
+                    <!-- /.ace-settings-box -->
+                </div>
+                <!-- /.ace-settings-container -->
+                <div class="row">
+                    <div id="content-load"  class="col-sm-12 col-lg-12 col-xs-12 col-xl-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        @yield('content')
+                        <!-- PAGE CONTENT ENDS -->
+                    </div><!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.page-content -->
+        </div>
+    </div>
+</div>
+@include('layouts.admin._footer')
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+</a>
+
+<!-- /.main-container -->
+
+<!-- basic scripts -->
+<script src="{{ asset('admin-assets/js/admin-app.js')}}"></script>
+<!-- LOAD MY JS CODES  -->
+<script src="{{ asset('admin-assets/js/myCodes.js')}}"></script>
+
+
+<!-- ace scripts -->
+@if (env('APP_AJAX'))
+    <!-- LOAD PJAX -->
+    <script src="{{ asset('js/pjax/pjax.min.js') }}"></script>
+    <!-- script for load page on AJAX-->
+    <script>
+        var pjax = new Pjax({
+            elements: ".click_me",
+            selectors: ["title", "#extra_css", "#content-load", "#extra_js",],
+            cacheBust : false,
+            timeout: false ,
+        });
+    </script>
+@endif
+<!-- END script for load page on ajax-->
+
+<!-- SEARCH SCRIPT -->
+<script type="text/javascript">
+   document.addEventListener('DOMContentLoaded', () => {
+
+       const form = document.getElementById('form-search');
+
+       form.addEventListener('submit', async function (e) {
+
+           e.preventDefault();
+
+           const formData = new FormData(this);
+
+           const preview = document.querySelector('.preview');
+           const tableData = document.querySelector('.table_data');
+
+           try {
+
+               // قبل از ارسال
+               preview.style.display = 'block';
+
+               const response = await fetch("{{ route('admin.search') }}", {
+                   method: "POST",
+                   headers: {
+                       "X-CSRF-TOKEN": document
+                           .querySelector('meta[name="csrf-token"]')
+                           .content,
+                       "Accept": "application/json"
+                   },
+                   body: formData
+               });
+
+               const data = await response.json();
+
+               if (data.html.trim() === "") {
+                   preview.innerHTML = "No more records found";
+                   return;
+               }
+
+               tableData.innerHTML = data.html;
+               preview.style.display = "none";
+
+           } catch (error) {
+
+               alert("Error");
+               preview.style.display = "none";
+               console.error(error);
+
+           }
+
+       });
+
+   });
+</script>
+
+<div id="extra_js">
+    @yield('extra_js')
+</div>
+</body>
+</html>
